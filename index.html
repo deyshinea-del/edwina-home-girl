@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -449,13 +450,19 @@
 <body>
 
   <div class="scene">
+
     <div class="stars"></div>
 
-    <!-- CINEMATIC INTRO -->
+    <!-- INTRO -->
     <section class="intro" id="intro">
-      <div class="small-text">A little something for</div>
 
-      <h1 class="intro-title">Edwina.</h1>
+      <div class="small-text">
+        A little something for
+      </div>
+
+      <h1 class="intro-title">
+        Edwina.
+      </h1>
 
       <p class="intro-subtitle">
         My fav person deserves a proper question.
@@ -464,7 +471,9 @@
       <button class="enter-btn" id="enterBtn">
         Enter the experience →
       </button>
+
     </section>
+
 
     <!-- MAIN PROPOSAL -->
     <main class="experience" id="experience">
@@ -478,17 +487,22 @@
         <h2 class="question">
           Will you be<br>
           my home girl?
-          <span>because you're already my fav person 👀</span>
+          <span>
+            because you're already my fav person 👀
+          </span>
         </h2>
 
         <p class="message">
           No long speech 😂<br><br>
-          I just feel like someone as special as you deserves
-          an official position in my life.<br><br>
+
+          I just feel like someone as special as you
+          deserves an official position in my life.<br><br>
+
           So… what do you say?
         </p>
 
         <div class="actions">
+
           <button class="action yes" id="yesBtn">
             YES, obviously 🤍
           </button>
@@ -496,6 +510,7 @@
           <button class="action maybe" id="maybeBtn">
             Hmm… 👀
           </button>
+
         </div>
 
         <div class="tiny">
@@ -506,7 +521,8 @@
 
     </main>
 
-    <!-- SUCCESS SCREEN -->
+
+    <!-- SUCCESS -->
     <section class="success" id="success">
 
       <div class="success-content">
@@ -521,8 +537,11 @@
 
         <p class="success-text">
           Edwina is officially my home girl. 😂🤍<br><br>
+
           My fav person just got promoted.<br>
-          No refunds. No returns. You're stuck with me now. 😭
+
+          No refunds. No returns.
+          You're stuck with me now. 😭
         </p>
 
         <div class="signature">
@@ -535,95 +554,238 @@
 
   </div>
 
+
   <script>
-    const intro = document.getElementById("intro");
-    const experience = document.getElementById("experience");
-    const enterBtn = document.getElementById("enterBtn");
 
-    const yesBtn = document.getElementById("yesBtn");
-    const maybeBtn = document.getElementById("maybeBtn");
+    const intro =
+      document.getElementById("intro");
 
-    const success = document.getElementById("success");
-    const card = document.getElementById("card");
+    const experience =
+      document.getElementById("experience");
 
-    // Open cinematic experience
+    const enterBtn =
+      document.getElementById("enterBtn");
+
+    const yesBtn =
+      document.getElementById("yesBtn");
+
+    const maybeBtn =
+      document.getElementById("maybeBtn");
+
+    const success =
+      document.getElementById("success");
+
+    const card =
+      document.getElementById("card");
+
+
+    /* OPEN EXPERIENCE */
+
     enterBtn.addEventListener("click", () => {
+
       intro.classList.add("hidden");
 
       setTimeout(() => {
+
         experience.classList.add("active");
+
       }, 500);
+
     });
 
-    // YES button
+
+    /* YES + WHATSAPP */
+
     yesBtn.addEventListener("click", () => {
+
+      /*
+        Your WhatsApp number:
+        0555158842
+
+        International format:
+        233555158842
+      */
+
+      const yourNumber = "233555158842";
+
+      const message =
+        "Hey Deyshine 😭🤍 I said YES! I'll be your home girl.";
+
+      const whatsappURL =
+        "https://wa.me/" +
+        yourNumber +
+        "?text=" +
+        encodeURIComponent(message);
+
+
+      /*
+        Open WhatsApp with the message
+        already typed.
+      */
+
+      window.open(
+        whatsappURL,
+        "_blank"
+      );
+
+
+      /* Continue the animation */
+
       experience.classList.remove("active");
 
       setTimeout(() => {
+
         success.classList.add("show");
+
         createSparkles();
+
       }, 500);
+
     });
 
-    // Playful MAYBE button
-    maybeBtn.addEventListener("mouseenter", moveMaybe);
-    maybeBtn.addEventListener("click", moveMaybe);
+
+    /* PLAYFUL MAYBE BUTTON */
+
+    maybeBtn.addEventListener(
+      "mouseenter",
+      moveMaybe
+    );
+
+    maybeBtn.addEventListener(
+      "click",
+      moveMaybe
+    );
+
 
     function moveMaybe() {
+
       const maxX = 100;
       const maxY = 70;
 
-      const x = Math.random() * (maxX * 2) - maxX;
-      const y = Math.random() * (maxY * 2) - maxY;
+      const x =
+        Math.random() *
+        (maxX * 2) -
+        maxX;
+
+      const y =
+        Math.random() *
+        (maxY * 2) -
+        maxY;
 
       maybeBtn.style.transform =
         `translate(${x}px, ${y}px)`;
+
     }
 
-    // 3D card movement
-    document.addEventListener("mousemove", (event) => {
-      if (!experience.classList.contains("active")) return;
 
-      const x = (window.innerWidth / 2 - event.clientX) / 35;
-      const y = (window.innerHeight / 2 - event.clientY) / 35;
+    /* 3D CARD MOVEMENT */
 
-      card.style.transform =
-        `rotateY(${x}deg) rotateX(${y}deg)`;
-    });
+    document.addEventListener(
+      "mousemove",
+      (event) => {
 
-    document.addEventListener("mouseleave", () => {
-      card.style.transform = "rotateY(0deg) rotateX(0deg)";
-    });
+        if (
+          !experience.classList.contains(
+            "active"
+          )
+        ) {
+          return;
+        }
 
-    // Touch reset
-    document.addEventListener("touchmove", () => {
-      card.style.transform = "rotateY(0deg) rotateX(0deg)";
-    });
+        const x =
+          (
+            window.innerWidth / 2 -
+            event.clientX
+          ) / 35;
 
-    // Celebration particles
+        const y =
+          (
+            window.innerHeight / 2 -
+            event.clientY
+          ) / 35;
+
+        card.style.transform =
+          `rotateY(${x}deg) rotateX(${y}deg)`;
+
+      }
+    );
+
+
+    document.addEventListener(
+      "mouseleave",
+      () => {
+
+        card.style.transform =
+          "rotateY(0deg) rotateX(0deg)";
+
+      }
+    );
+
+
+    /* MOBILE TOUCH RESET */
+
+    document.addEventListener(
+      "touchmove",
+      () => {
+
+        card.style.transform =
+          "rotateY(0deg) rotateX(0deg)";
+
+      }
+    );
+
+
+    /* CELEBRATION */
+
     function createSparkles() {
-      for (let i = 0; i < 70; i++) {
-        const spark = document.createElement("div");
 
-        spark.className = "spark";
+      for (
+        let i = 0;
+        i < 70;
+        i++
+      ) {
 
-        spark.style.left = "50%";
-        spark.style.top = "50%";
+        const spark =
+          document.createElement("div");
 
-        spark.style.setProperty("--x", Math.random() * 100);
-        spark.style.setProperty("--y", Math.random() * 100);
+        spark.className =
+          "spark";
+
+        spark.style.left =
+          "50%";
+
+        spark.style.top =
+          "50%";
+
+        spark.style.setProperty(
+          "--x",
+          Math.random() * 100
+        );
+
+        spark.style.setProperty(
+          "--y",
+          Math.random() * 100
+        );
 
         spark.style.animationDelay =
           `${Math.random() * 0.5}s`;
 
-        document.body.appendChild(spark);
+        document.body.appendChild(
+          spark
+        );
 
         setTimeout(() => {
+
           spark.remove();
+
         }, 2200);
+
       }
+
     }
+
   </script>
 
 </body>
 </html>
+```
