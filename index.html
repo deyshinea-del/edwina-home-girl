@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#050509" />
+  <title>Edwina — My Home Girl</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #050509;
+      --white: #ffffff;
+      --soft: rgba(255,255,255,.72);
+      --muted: rgba(255,255,255,.48);
+      --glass: rgba(255,255,255,.055);
+      --border: rgba(255,255,255,.12);
+      --pink: #ff4fa3;
+      --violet: #8b5cf6;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: white;
+      font-family: Inter, sans-serif;
+    }
+
+    body {
+      perspective: 1400px;
+    }
+
+    button,
+    a {
+      font-family: inherit;
+    }
+
+    #app {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 45%, rgba(255,79,163,.09), transparent 28%),
+        radial-gradient(circle at 20% 20%, rgba(139,92,246,.08), transparent 30%),
+        #050509;
+    }
+
+    /* ===================================
+       CINEMATIC GRAIN
+    =================================== */
+
+    .grain {
+      position: fixed;
+      inset: -50%;
+      z-index: 100;
+      pointer-events: none;
+      opacity: .045;
+      background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+      animation: grainMove .2s steps(2) infinite;
+    }
+
+    @keyframes grainMove {
+      0% { transform: translate(0,0); }
+      25% { transform: translate(2%,-2%); }
+      50% { transform: translate(-2%,2%); }
+      75% { transform: translate(2%,2%); }
+      100% { transform: translate(-2%,-2%); }
+    }
+
+    /* ===================================
+       AURORA LIGHTS
+    =================================== */
+
+    .aurora {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: .24;
+    }
+
+    .orb.one {
+      width: 30vw;
+      height: 30vw;
+      left: -10vw;
+      top: -8vw;
+      background: #7c3aed;
+      animation: orbFloat1 12s ease-in-out infinite alternate;
+    }
+
+    .orb.two {
+      width: 35vw;
+      height: 35vw;
+      right: -12vw;
+      bottom: -15vw;
+      background: #ec4899;
+      animation: orbFloat2 15s ease-in-out infinite alternate;
+    }
+
+    .orb.three {
+      width: 18vw;
+      height: 18vw;
+      left: 42%;
+      top: 42%;
+      background: #6366f1;
+      opacity: .12;
+      animation: orbFloat3 10s ease-in-out infinite alternate;
+    }
+
+    @keyframes orbFloat1 {
+      to { transform: translate(9vw, 7vh) scale(1.15); }
+    }
+
+    @keyframes orbFloat2 {
+      to { transform: translate(-10vw, -8vh) scale(1.1); }
+    }
+
+    @keyframes orbFloat3 {
+      to { transform: translate(4vw,-4vh) scale(1.25); }
+    }
+
+    /* ===================================
+       3D GRID FLOOR
+    =================================== */
+
+    .grid-floor {
+      position: absolute;
+      width: 170%;
+      height: 65%;
+      left: -35%;
+      bottom: -42%;
+      transform: rotateX(68deg);
+      background-image:
+        linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px);
+      background-size: 70px 70px;
+      mask-image: linear-gradient(to top, black, transparent 85%);
+      animation: gridMove 10s linear infinite;
+      opacity: .42;
+    }
+
+    @keyframes gridMove {
+      from { background-position: 0 0; }
+      to { background-position: 0 140px; }
+    }
+
+    /* ===================================
+       PARTICLES
+    =================================== */
+
+    #particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: white;
+      opacity: .35;
+      animation: particleFloat linear infinite;
+    }
+
+    @keyframes particleFloat {
+      from {
+        transform: translate3d(0,100vh,0);
+      }
+      to {
+        transform: translate3d(0,-20vh,0);
+      }
+    }
+
+    /* ===================================
+       SCENE SYSTEM
+    =================================== */
+
+    .scene {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: scale(1.08);
+      transition:
+        opacity 1s ease,
+        transform 1.2s cubic-bezier(.2,.75,.15,1),
+        visibility 1s;
+    }
+
+    .scene.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: scale(1);
+    }
+
+    .scene.exit {
+      opacity: 0;
+      transform: scale(.94);
+      pointer-events: none;
+    }
+
+    /* ===================================
+       INTRO
+    =================================== */
+
+    .intro {
+      text-align: center;
+      z-index: 5;
+    }
+
+    .intro-symbol {
+      width: 86px;
+      height: 86px;
+      margin: 0 auto 35px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      background: rgba(255,255,255,.025);
+      box-shadow:
+        0 0 60px rgba(255,79,163,.16),
+        inset 0 0 25px rgba(255,255,255,.04);
+      animation:
+        symbolPulse 2.8s ease-in-out infinite,
+        symbolSpin 15s linear infinite;
+    }
+
+    @keyframes symbolPulse {
+      50% {
+        transform: scale(1.08);
+      }
+    }
+
+    @keyframes symbolSpin {
+      to {
+        box-shadow:
+          0 0 90px rgba(139,92,246,.18),
+          inset 0 0 35px rgba(255,255,255,.06);
+      }
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: .35em;
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 18px;
+    }
+
+    .intro h1 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(48px, 9vw, 110px);
+      font-weight: 500;
+      line-height: .9;
+      letter-spacing: -.045em;
+    }
+
+    .intro p {
+      color: var(--soft);
+      margin-top: 24px;
+      font-size: 14px;
+      letter-spacing: .06em;
+    }
+
+    /* ===================================
+       NAME REVEAL
+    =================================== */
+
+    .name-scene {
+      text-align: center;
+      z-index: 5;
+    }
+
+    .name-scene .mini {
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: .42em;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .name-scene h2 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(82px, 18vw, 230px);
+      line-height: .75;
+      font-weight: 500;
+      letter-spacing: -.055em;
+      background: linear-gradient(
+        120deg,
+        #fff,
+        #f0d7e9,
+        #ff4fa3,
+        #fff
+      );
+      background-size: 250% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shineText 5s linear infinite;
+      text-shadow: 0 0 80px rgba(255,79,163,.15);
+    }
+
+    @keyframes shineText {
+      to {
+        background-position: 250% center;
+      }
+    }
+
+    .name-scene .sub {
+      margin-top: 28px;
+      color: var(--soft);
+      font-size: 12px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+
+    /* ===================================
+       CINEMATIC MESSAGE
+    =================================== */
+
+    .message {
+      width: min(900px, 100%);
+      text-align: center;
+      z-index: 5;
+    }
+
+    .message .topline {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      margin-bottom: 25px;
+    }
+
+    .message h2 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(45px, 7vw, 88px);
+      font-weight: 500;
+      line-height: .95;
+    }
+
+    .message p {
+      max-width: 620px;
+      margin: 32px auto 0;
+      color: var(--soft);
+      font-size: 15px;
+      line-height: 1.9;
+    }
+
+    /* ===================================
+       PROPOSAL CARD
+    =================================== */
+
+    .card-wrap {
+      width: min(490px, 100%);
+      perspective: 1600px;
+      z-index: 10;
+    }
+
+    .card {
+      position: relative;
+      padding: 48px 40px;
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,.08),
+          rgba(255,255,255,.025)
+        );
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      box-shadow:
+        0 50px 100px rgba(0,0,0,.45),
+        inset 0 1px 0 rgba(255,255,255,.1),
+        0 0 100px rgba(255,79,163,.06);
+      transform-style: preserve-3d;
+      transition: transform .18s ease;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      left: -90px;
+      top: -100px;
+      border-radius: 50%;
+      background: #ff4fa3;
+      filter: blur(80px);
+      opacity: .12;
+      pointer-events: none;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      right: -100px;
+      bottom: -120px;
+      border-radius: 50%;
+      background: #8b5cf6;
+      filter: blur(80px);
+      opacity: .1;
+      pointer-events: none;
+    }
+
+    .card-label {
+      position: relative;
+      z-index: 2;
+      text-transform: uppercase;
+      letter-spacing: .32em;
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    .card h2 {
+      position: relative;
+      z-index: 2;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 58px;
+      line-height: .9;
+      font-weight: 500;
+      margin-top: 24px;
+    }
+
+    .card .question {
+      position: relative;
+      z-index: 2;
+      margin-top: 22px;
+      color: var(--soft);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 34px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .btn {
+      border: 0;
+      cursor: pointer;
+      height: 56px;
+      border-radius: 999px;
+      padding: 0 26px;
+      transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+    }
+
+    .btn:active {
+      transform: scale(.96);
+    }
+
+    .accept {
+      flex: 1;
+      color: white;
+      font-weight: 600;
+      background:
+        linear-gradient(
+          120deg,
+          #ff4fa3,
+          #8b5cf6
+        );
+      box-shadow:
+        0 14px 35px rgba(255,79,163,.2);
+    }
+
+    .accept:hover {
+      transform: translateY(-3px);
+      box-shadow:
+        0 20px 45px rgba(255,79,163,.3);
+    }
+
+    .later {
+      background: rgba(255,255,255,.05);
+      color: var(--soft);
+      border: 1px solid rgba(255,255,255,.09);
+    }
+
+    .later:hover {
+      background: rgba(255,255,255,.09);
+      transform: translateY(-3px);
+    }
+
+    /* ===================================
+       SUCCESS
+    =================================== */
+
+    .success {
+      text-align: center;
+      z-index: 8;
+    }
+
+    .success-ring {
+      width: 105px;
+      height: 105px;
+      border-radius: 50%;
+      margin: 0 auto 32px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.03);
+      font-size: 38px;
+      box-shadow: 0 0 90px rgba(255,79,163,.2);
+      animation: successRing 1.4s ease forwards;
+    }
+
+    @keyframes successRing {
+      0% {
+        transform: scale(.3);
+        opacity: 0;
+      }
+      70% {
+        transform: scale(1.13);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .success h2 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(60px, 10vw, 110px);
+      line-height: .8;
+      font-weight: 500;
+    }
+
+    .success p {
+      margin-top: 26px;
+      color: var(--soft);
+      letter-spacing: .12em;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    /* ===================================
+       FINALE
+    =================================== */
+
+    .finale {
+      width: min(850px, 100%);
+      text-align: center;
+      z-index: 10;
+    }
+
+    .finale .small {
+      text-transform: uppercase;
+      letter-spacing: .42em;
+      color: var(--muted);
+      font-size: 10px;
+      margin-bottom: 20px;
+    }
+
+    .finale h2 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(65px, 11vw, 145px);
+      line-height: .78;
+      font-weight: 500;
+      letter-spacing: -.05em;
+      background: linear-gradient(
+        135deg,
+        #fff,
+        #f9b5d6,
+        #ff4fa3
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .finale p {
+      max-width: 620px;
+      margin: 34px auto 0;
+      color: var(--soft);
+      line-height: 1.9;
+      font-size: 15px;
+    }
+
+    .contact {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 30px;
+      height: 54px;
+      padding: 0 28px;
+      border-radius: 999px;
+      text-decoration: none;
+      color: white;
+      font-size: 13px;
+      border: 1px solid rgba(255,255,255,.11);
+      background: rgba(255,255,255,.045);
+      backdrop-filter: blur(18px);
+      transition: .25s ease;
+    }
+
+    .contact:hover {
+      transform: translateY(-3px);
+      background: rgba(255,255,255,.08);
+    }
+
+    /* ===================================
+       TOP HUD
+    =================================== */
+
+    .hud {
+      position: fixed;
+      top: 28px;
+      left: 28px;
+      right: 28px;
+      display: flex;
+      justify-content: space-between;
+      z-index: 30;
+      pointer-events: none;
+      font-size: 9px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.34);
+    }
+
+    .hud-right {
+      text-align: right;
+    }
+
+    /* ===================================
+       CINEMATIC VIGNETTE
+    =================================== */
+
+    .vignette {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 20;
+      background:
+        radial-gradient(
+          circle,
+          transparent 35%,
+          rgba(0,0,0,.55) 100%
+        );
+    }
+
+    /* ===================================
+       CONFETTI
+    =================================== */
+
+    #celebration {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 50;
+      overflow: hidden;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 18px;
+      animation: heartFly 2.7s ease-out forwards;
+    }
+
+    @keyframes heartFly {
+      0% {
+        transform: translateY(0) scale(.5) rotate(0deg);
+        opacity: 0;
+      }
+
+      15% {
+        opacity: 1;
+      }
+
+      100% {
+        transform:
+          translate(
+            calc(-50vw + 100vw * var(--x)),
+            -100vh
+          )
+          scale(1.2)
+          rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .confetti {
+      position: absolute;
+      width: 8px;
+      height: 14px;
+      animation: confettiFall 3.2s ease-out forwards;
+    }
+
+    @keyframes confettiFall {
+      0% {
+        transform:
+          translate3d(0,-20px,0)
+          rotate(0deg);
+        opacity: 1;
+      }
+
+      100% {
+        transform:
+          translate3d(
+            calc(-40vw + 80vw * var(--x)),
+            100vh,
+            0
+          )
+          rotate(760deg);
+        opacity: 0;
+      }
+    }
+
+    /* ===================================
+       RESPONSIVE
+    =================================== */
+
+    @media(max-width: 600px) {
+      .card {
+        padding: 38px 26px;
+        border-radius: 24px;
+      }
+
+      .card h2 {
+        font-size: 46px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .hud {
+        left: 18px;
+        right: 18px;
+        top: 18px;
+      }
+
+      .message p,
+      .finale p {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="app">
+
+  <div class="grain"></div>
+
+  <div class="aurora">
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
+  </div>
+
+  <div class="grid-floor"></div>
+  <div id="particles"></div>
+
+  <div class="hud">
+    <div>DEYSHINE / PRIVATE EXPERIENCE</div>
+    <div class="hud-right">EDWINA / 001</div>
+  </div>
+
+  <!-- =========================
+       SCENE 1
+  ========================== -->
+
+  <section class="scene active" id="scene1">
+    <div class="intro">
+
+      <div class="intro-symbol">
+        ✦
+      </div>
+
+      <div class="eyebrow">
+        A private message
+      </div>
+
+      <h1>
+        For Someone<br>
+        Special.
+      </h1>
+
+      <p>
+        Please don't rush this.
+      </p>
+
+    </div>
+  </section>
+
+  <!-- =========================
+       SCENE 2
+  ========================== -->
+
+  <section class="scene" id="scene2">
+
+    <div class="name-scene">
+
+      <div class="mini">
+        This one is for
+      </div>
+
+      <h2>
+        Edwina
+      </h2>
+
+      <div class="sub">
+        My Fav Person • My Friend
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- =========================
+       SCENE 3
+  ========================== -->
+
+  <section class="scene" id="scene3">
+
+    <div class="message">
+
+      <div class="topline">
+        Before the question
+      </div>
+
+      <h2>
+        Some people<br>
+        just become home.
+      </h2>
+
+      <p>
+        You're one of those people.
+        The laughs, random conversations,
+        the energy, the memories —
+        somehow you became one of my favourite
+        people to have around.
+      </p>
+
+    </div>
+
+  </section>
+
+  <!-- =========================
+       SCENE 4
+  ========================== -->
+
+  <section class="scene" id="scene4">
+
+    <div class="card-wrap">
+
+      <div class="card" id="card">
+
+        <div class="card-label">
+          One important question
+        </div>
+
+        <h2>
+          Edwina,
+          <br>
+          My Home Girl?
+        </h2>
+
+        <p class="question">
+          Officially becoming my go-to person,
+          my chaos partner,
+          my favourite friend and
+          forever Home Girl? 😂❤️
+        </p>
+
+        <div class="buttons">
+
+          <button
+            class="btn accept"
+            id="acceptBtn"
+          >
+            ACCEPT ✦
+          </button>
+
+          <button
+            class="btn later"
+            id="laterBtn"
+          >
+            Let me think
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- =========================
+       SCENE 5
+  ========================== -->
+
+  <section class="scene" id="scene5">
+
+    <div class="success">
+
+      <div class="success-ring">
+        ✦
+      </div>
+
+      <h2>
+        It's Official.
+      </h2>
+
+      <p>
+        Home Girl + Fav Person
+      </p>
+
+    </div>
+
+  </section>
+
+  <!-- =========================
+       SCENE 6
+  ========================== -->
+
+  <section class="scene" id="scene6">
+
+    <div class="finale">
+
+      <div class="small">
+        Your new status
+      </div>
+
+      <h2>
+        Welcome Home Girl,
+        <br>
+        Edwina.
+      </h2>
+
+      <p>
+        No complicated contract.
+        No serious paperwork.
+        Just good vibes, unforgettable memories,
+        random laughter and a friendship
+        that deserves its own little celebration.
+        🫶🏽
+      </p>
+
+      <a
+        class="contact"
+        href="tel:0543066156"
+      >
+        📞 Call Your Home Boy
+      </a>
+
+    </div>
+
+  </section>
+
+  <div id="celebration"></div>
+
+  <div class="vignette"></div>
+
+</div>
+
+<script>
+
+  /* ===================================
+     SCENE ENGINE
+  =================================== */
+
+  const scenes = [
+    document.getElementById("scene1"),
+    document.getElementById("scene2"),
+    document.getElementById("scene3"),
+    document.getElementById("scene4"),
+    document.getElementById("scene5"),
+    document.getElementById("scene6")
+  ];
+
+  let currentScene = 0;
+  let accepted = false;
+
+  function showScene(index) {
+
+    scenes.forEach((scene, i) => {
+
+      scene.classList.remove("active");
+      scene.classList.remove("exit");
+
+      if (i === index) {
+        scene.classList.add("active");
+      }
+
+    });
+
+    currentScene = index;
+  }
+
+  function nextScene() {
+
+    if (currentScene < scenes.length - 1) {
+      showScene(currentScene + 1);
+    }
+
+  }
+
+  /* ===================================
+     CINEMATIC TIMELINE
+  =================================== */
+
+  setTimeout(() => {
+    nextScene();
+  }, 4000);
+
+  setTimeout(() => {
+    nextScene();
+  }, 7600);
+
+  setTimeout(() => {
+    nextScene();
+  }, 11500);
+
+  /* ===================================
+     ACCEPT
+  =================================== */
+
+  const acceptBtn =
+    document.getElementById("acceptBtn");
+
+  acceptBtn.addEventListener("click", () => {
+
+    if (accepted) return;
+
+    accepted = true;
+
+    celebrate();
+
+    setTimeout(() => {
+
+      showScene(4);
+
+    }, 450);
+
+    setTimeout(() => {
+
+      showScene(5);
+
+    }, 3600);
+
+  });
+
+  /* ===================================
+     LATER BUTTON
+  =================================== */
+
+  document
+    .getElementById("laterBtn")
+    .addEventListener("click", () => {
+
+      const button =
+        document.getElementById("laterBtn");
+
+      button.textContent =
+        "😂 You better think fast";
+
+      setTimeout(() => {
+
+        button.textContent =
+          "Accept whenever you're ready";
+
+      }, 1800);
+
+    });
+
+  /* ===================================
+     HEARTS + CONFETTI
+  =================================== */
+
+  function celebrate() {
+
+    const container =
+      document.getElementById("celebration");
+
+    const hearts = [
+      "❤️",
+      "🫶🏽",
+      "💖",
+      "✨",
+      "💕"
+    ];
+
+    for (let i = 0; i < 75; i++) {
+
+      const heart =
+        document.createElement("div");
+
+      heart.className = "heart";
+
+      heart.textContent =
+        hearts[
+          Math.floor(
+            Math.random() * hearts.length
+          )
+        ];
+
+      heart.style.left =
+        Math.random() * 100 + "%";
+
+      heart.style.bottom =
+        "-30px";
+
+      heart.style.setProperty(
+        "--x",
+        Math.random()
+      );
+
+      heart.style.animationDelay =
+        Math.random() * .8 + "s";
+
+      container.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 3500);
+
+    }
+
+    for (let i = 0; i < 110; i++) {
+
+      const piece =
+        document.createElement("div");
+
+      piece.className =
+        "confetti";
+
+      piece.style.left =
+        Math.random() * 100 + "%";
+
+      piece.style.top =
+        "-20px";
+
+      piece.style.setProperty(
+        "--x",
+        Math.random()
+      );
+
+      piece.style.transform =
+        `rotate(${Math.random() * 360}deg)`;
+
+      piece.style.animationDelay =
+        Math.random() * 1.2 + "s";
+
+      piece.style.background =
+        `hsl(${Math.random() * 360}, 85%, 65%)`;
+
+      container.appendChild(piece);
+
+      setTimeout(() => {
+        piece.remove();
+      }, 4000);
+
+    }
+
+  }
+
+  /* ===================================
+     FLOATING PARTICLES
+  =================================== */
+
+  const particles =
+    document.getElementById("particles");
+
+  for (let i = 0; i < 90; i++) {
+
+    const particle =
+      document.createElement("div");
+
+    particle.className =
+      "particle";
+
+    particle.style.left =
+      Math.random() * 100 + "%";
+
+    particle.style.top =
+      Math.random() * 100 + "%";
+
+    particle.style.opacity =
+      Math.random() * .65;
+
+    particle.style.animationDuration =
+      6 + Math.random() * 14 + "s";
+
+    particle.style.animationDelay =
+      Math.random() * -15 + "s";
+
+    const size =
+      Math.random() * 3 + 1;
+
+    particle.style.width =
+      size + "px";
+
+    particle.style.height =
+      size + "px";
+
+    particles.appendChild(particle);
+
+  }
+
+  /* ===================================
+     3D CARD TILT
+  =================================== */
+
+  const card =
+    document.getElementById("card");
+
+  function tiltCard(x, y) {
+
+    const rect =
+      card.getBoundingClientRect();
+
+    const rotateX =
+      ((y - rect.top) / rect.height - .5) * -9;
+
+    const rotateY =
+      ((x - rect.left) / rect.width - .5) * 12;
+
+    card.style.transform =
+      `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(18px)`;
+
+  }
+
+  document.addEventListener("mousemove", (event) => {
+
+    if (currentScene !== 3) {
+      return;
+    }
+
+    tiltCard(event.clientX, event.clientY);
+
+  });
+
+  document.addEventListener("mouseleave", () => {
+
+    card.style.transform =
+      "rotateX(0deg) rotateY(0deg)";
+
+  });
+
+  /* ===================================
+     TOUCH PARALLAX
+  =================================== */
+
+  document.addEventListener("touchmove", (event) => {
+
+    if (currentScene !== 3) {
+      return;
+    }
+
+    const touch =
+      event.touches[0];
+
+    tiltCard(
+      touch.clientX,
+      touch.clientY
+    );
+
+  }, { passive: true });
+
+</script>
+
+</body>
+</html>
